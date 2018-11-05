@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>  //included in order to force the output to conform to the homework rubric
+
+int main(int argc, char *argv[])
+{
+int x=100;
+printf("I am the main process (pid:%d) and I have set x equal to %d\n", (int) getpid(), (int) x);
+int rc = fork();  //the main process is forked here
+if (rc < 0) {
+// fork failed; exit
+fprintf(stderr, "fork failed\n");
+exit(1);
+}
+else if (rc == 0) {
+// child (new process)
+printf("In the child path (pid:%d), x starts at %d.\n", (int) getpid(), (int) x);
+x=x/2;
+printf("In the child path (pid:%d), x has been changed to %d.\n", (int) getpid(), (int) x);
+}
+else {
+// parent (original process)
+wait(NULL);  //the parent waits for the child in order to force the output to conform to the homework rubric
+printf("In the parent path (pid:%d), x starts at %d.\n", (int) getpid(), (int) x);
+x=x*4;
+printf("In the parent path (pid:%d), x has been changed to %d.\n", (int) getpid(), (int) x);
+}
+return 0;
+}
